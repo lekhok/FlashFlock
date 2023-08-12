@@ -49,6 +49,40 @@ handleNextClick = () => {
 }
 ```
 
+<h5>2. Dublicate Pagination and rendering</h5>
+In response to an issue with duplicate rendering and incorrect pagination when fetching more data, the following updates were made to the codebase:
+
+News Component
+fetchMoreData Function
+The fetchMoreData function was updated to ensure proper pagination and appending of new articles to the existing list. Here's a breakdown of the changes:
+
+```javascript
+fetchMoreData = async () => {
+  // Increment the page number for fetching the next page of data
+  const nextPage = this.state.page + 1
+
+  // Construct the API URL for fetching news data of the next page
+  const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${nextPage}&pageSize=${this.props.pageSize}`
+
+  try {
+    // Fetch data from the API using the constructed URL
+    let data = await fetch(url)
+    let parsedData = await data.json()
+
+    // Update the state to include the newly fetched articles
+    this.setState((prevState) => ({
+      articles: prevState.articles.concat(parsedData.articles), // Append new articles
+      totalResults: parsedData.totalResults,
+      loading: false,
+      page: nextPage, // Update the page number in the state
+    }))
+  } catch (error) {
+    console.error("Error fetching more news:", error)
+    // Handle error scenario if necessary
+  }
+}
+```
+
 <h2>Credits: </h2>
 This project is based on the YouTube tutorial by CodeWithHarry on React class-based components. The tutorial provided the foundation for the project's structure and functionality. Additional enhancements and customizations were added by Kumud C Lekhok to further showcase practical skills and learning progress.
 
